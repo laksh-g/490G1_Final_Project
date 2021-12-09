@@ -1,2 +1,2 @@
 # 490G1_Final_Project
-Genre detection using deep learning
+Genre classification on mp3 files using deep learning
