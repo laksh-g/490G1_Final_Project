@@ -15,8 +15,6 @@ import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
 
-
-
 def process_data():
     spectrogram_file = "spectrogram"
     wavelets_file = "wavelets"

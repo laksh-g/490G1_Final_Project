@@ -6,7 +6,7 @@ class Dataset(torch.utils.data.Dataset):
   'Characterizes a dataset for PyTorch'
   def __init__(self, train):
         'Initialization'
-        self.train = np.asarray(train)
+        self.train = np.asarray(train, dtype=object)
         self.labels = [x[1][1] for x in self.train]
         self.list_IDs = np.arange(1, len(train)+1)
 
