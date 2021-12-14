@@ -10,10 +10,16 @@ import torch.optim as o
 import torch.utils.data
 import tqdm
 import torch.utils.data as tud
+from torch.utils.data import TensorDataset
+import torchvision.io
+import torchvision.transforms
+
 from utils import Dataset
 import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
+
+IMG_SIZE = 256
 
 def process_data():
     spectrogram_file = "spectrogram"
@@ -29,35 +35,51 @@ def process_data():
     class_idx = 0
     for class_name in glob.glob(os.path.join(spectrogram_train_file, "*")):
         for image in glob.glob(os.path.join(class_name, "*")):
-            spectrogram_train.append((cv2.imread(image), class_idx)) # fix image read
+            # print(type(torch.from_numpy(cv2.resize(cv2.imread(image), (IMG_SIZE, IMG_SIZE)))))
+            spectrogram_train.append((torchvision.io.read_image(image), class_idx)) # fix image read
         class_idx+=1
     spectrogram_test_file = os.path.join(spectrogram_file, "test")
     class_idx = 0
     for class_name in glob.glob(os.path.join(spectrogram_test_file, "*")):
         for image in glob.glob(os.path.join(class_name, "*")):
-            spectrogram_test.append((cv2.imread(image), class_idx)) # fix image read
+            spectrogram_test.append((torchvision.io.read_image(image), class_idx)) # fix image read
         class_idx+=1
 
     wavelets_train_file = os.path.join(wavelets_file, "train")
     class_idx = 0
     for class_name in glob.glob(os.path.join(wavelets_train_file, "*")):
         for image in glob.glob(os.path.join(class_name, "*")):
-            wavelets_train.append((cv2.imread(image), class_idx)) # fix image read
+            wavelets_train.append((torchvision.io.read_image(image), class_idx))# fix image read
         class_idx+=1
 
     wavelets_test_file = os.path.join(wavelets_file, "test")
     class_idx = 0
     for class_name in glob.glob(os.path.join(wavelets_test_file, "*")):
         for image in glob.glob(os.path.join(class_name, "*")):
-            wavelets_test.append((cv2.imread(image), class_idx)) # fix image read
+            wavelets_test.append((torchvision.io.read_image(image), class_idx)) # fix image read
         class_idx+=1
 
-    train = list(zip(wavelets_train, spectrogram_train))
-    test = list(zip(wavelets_test, spectrogram_test))
+    train = spectrogram_train
+    tr_x = [torch.tensor(item[0]) for item in train]
+    tr_y = torch.tensor([int(item[1]) for item in train])
+    b = torch.Tensor((len(tr_y), 256, 256, 3))
+    train_x = torch.stack(tr_x, out=b)
+    my_dataset = TensorDataset(train_x, tr_y)
+    dataloader_train = torch.utils.data.DataLoader(my_dataset)
+
+    test = spectrogram_test
+    ts_x = [torch.tensor(item[0]) for item in test]
+    ts_y = torch.tensor([int(item[1]) for item in test])
+    b = torch.Tensor((len(ts_y), 256, 256, 3))
+    test_x = torch.stack(ts_x, out=b)
+    my_dataset = TensorDataset(test_x, ts_y)
+    dataloader_test = torch.utils.data.DataLoader(my_dataset)
+    # train = list(zip(wavelets_train, spectrogram_train))
+    # test = list(zip(wavelets_test, spectrogram_test))
     # train is a list of tuples, each tuple has two baby tuples, each baby tuple has (image (wavelets/spectrogram), class_idx)
     # [((), ()),((),()),...]
     print("Finished Loading data")
-    return train, test
+    return dataloader_train, dataloader_test
 
 
 def train_model(model, train_loader, optimizer, epoch, log_interval):
@@ -113,9 +135,7 @@ def train_main():
     decay = 0
     BATCH_SIZE = 2
     optim = o.SGD(net.parameters(), lr=lr, momentum=momentum)
-    train_load_temp = Dataset(train, device)
-    train_loader = torch.utils.data.DataLoader(train_load_temp, batch_size=BATCH_SIZE,
-                                               shuffle=True, **kwargs)
+    train_loader = train
     train_losses = []
 
     for epoch in range(epochs):
@@ -134,14 +154,10 @@ TEMPERATURE = 0.35
 class MusicGenreNet(nn.Module):
     def __init__(self):
         super(MusicGenreNet, self).__init__()
-        #self.conv1 = nn.Conv2d(6, 16, (3, 3), stride=(2, 2))
         self.conv1 = nn.Conv2d(3, 16, (3, 3))
         self.conv2 = nn.Conv2d(16, 32, (3, 3))
         self.conv3 = nn.Conv2d(32, 64, (3, 3))
-        # self.conv1 = nn.Conv2d(3, 16, 3, stride=2)
-        # self.conv2 = nn.Conv2d(16, 32, 3, stride=2)
-        # self.conv3 = nn.Conv2d(32, 64, 3, stride=2)
-        self.linear = nn.Linear(1024, 10)
+        self.linear = nn.Linear(65536, 10)
 
     def forward(self, x):
         x = self.conv1(x)
