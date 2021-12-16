@@ -7,6 +7,9 @@ import torchvision.io
 import torchvision.transforms as T
 import torch
 import multiprocessing
+import GUI
+
+from pydub import AudioSegment
 
 USE_CUDA = False
 use_cuda = USE_CUDA and torch.cuda.is_available()
@@ -18,41 +21,55 @@ kwargs = {'num_workers': 6,
 
 class application:
     def audio_to_wavelets(self, mp3):
-        mp3_title = os.path.basename(mp3)
-        mp3_path = os.path.join(os.getcwd(), mp3_title)
-        x, sr = librosa.load(mp3_path)
-        librosa.display.waveplot(x)
         if not os.path.exists('temp'):
             os.mkdir('temp')
-        save_path = os.path.join(os.getcwd(), 'temp', mp3_title + '_wavelet.png')
-        plt.savefig(save_path)
+        mp3_title = os.path.basename(mp3)
+        mp3_path = os.path.join(os.getcwd(), mp3_title)
+        save_path = os.path.join(os.getcwd(), 'temp')
+        export_dst = os.path.join(save_path, mp3_title.split(".")[0] + '.wav')
+        sound = AudioSegment.from_mp3(mp3_path)
+        sound.export(export_dst, format="wav")
+        x, sr = librosa.load(export_dst)
+        librosa.display.waveplot(x)
+
+        wavelet_path = os.path.join(os.getcwd(), 'temp', mp3_title.split(".")[0] + '_wavelet.png')
+        plt.savefig(wavelet_path)
         plt.close()
-        return save_path
+        return wavelet_path
 
 
     def audio_to_spectrogram(self, mp3):
+        if not os.path.exists('temp'):
+            os.mkdir('temp')
         mp3_title = os.path.basename(mp3)
         mp3_path = os.path.join(os.getcwd(), mp3_title)
-        x, sr = librosa.load(mp3_path)
+        save_path = os.path.join(os.getcwd(), 'temp')
+        export_dst = os.path.join(save_path, mp3_title.split(".")[0] + '.wav')
+        sound = AudioSegment.from_mp3(mp3_path)
+        sound.export(export_dst, format="wav")
+
+        x, sr = librosa.load(export_dst)
         X = librosa.stft(x)
         Xdb = librosa.amplitude_to_db(abs(X))
         librosa.display.specshow(Xdb)
-        save_path = os.path.join(os.getcwd(), 'temp', mp3_title + '_spectrogram.png')
-        plt.savefig(save_path)
+        spectrogram_path = os.path.join(os.getcwd(), 'temp', mp3_title.split(".")[0] + '_spectrogram.png')
+        plt.savefig(spectrogram_path)
         plt.close()
-        return save_path
+        return spectrogram_path
 
-    def get_inputs(self):
-        print("Please enter audio file path")
+    def get_inputs(self, mp3, model_version=None):
+        #print("Please enter audio file path")
         # audio_file = input()
-        audio_file = "still got the blues.mp3"
+        audio_file = mp3
         print(f"Extracting wavelet information from {audio_file}...")
         spectrogram = app.audio_to_spectrogram(audio_file)
         print(f"Extracting spectrogram information from {audio_file}...")
         wavelet =  app.audio_to_wavelets(audio_file)
-        print("Enter model path")
-        # model_path = input()
-        model_path = "C:\\Users\\laksh\\Desktop\\UW\\Deep Learning\\saved_models\\model_2.0"
+        if model_version is not None:
+            model_path = model_version
+        else:
+            model_path = "C:\\Users\\laksh\\Desktop\\UW\\Deep Learning\\saved_models\\model_2.0"
+            print(f"Defaulting to model path {model_path}")
         print(f"Loading model...")
         net = MusicGenreNet()
         net.load_model(model_path)
@@ -71,7 +88,9 @@ class application:
         return genre
 
 if __name__ == '__main__':
+    mp3_name = GUI.browseFiles()
+    print('reached')
     app = application()
-    audio_file, spectrogram, wavelet, model = app.get_inputs()
+    model_version = 'saved_models/model_2.0'
+    audio_file, spectrogram, wavelet, model = app.get_inputs(mp3_name, model_version)
     genre = app.classify_audio(audio_file, spectrogram, wavelet, model)
-
