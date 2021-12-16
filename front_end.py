@@ -52,7 +52,7 @@ class application:
         wavelet =  app.audio_to_wavelets(audio_file)
         print("Enter model path")
         # model_path = input()
-        model_path = "C:\\Users\\laksh\\Desktop\\UW\\Deep Learning\\saved_models\\model_1.5"
+        model_path = "C:\\Users\\laksh\\Desktop\\UW\\Deep Learning\\saved_models\\model_2.0"
         print(f"Loading model...")
         net = MusicGenreNet()
         net.load_model(model_path)
