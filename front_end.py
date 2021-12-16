@@ -37,7 +37,6 @@ class application:
         plt.close()
         return wavelet_path
 
-
     def audio_to_spectrogram(self, mp3):
         if not os.path.exists('temp'):
             os.mkdir('temp')
@@ -89,7 +88,6 @@ class application:
 
 if __name__ == '__main__':
     mp3_name = GUI.browseFiles()
-    print('reached')
     app = application()
     model_version = 'saved_models/model_2.0'
     audio_file, spectrogram, wavelet, model = app.get_inputs(mp3_name, model_version)
