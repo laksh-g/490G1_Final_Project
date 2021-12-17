@@ -1,4 +1,4 @@
-# 490G1_Final_Project: Genre classification on mp3 files using deep learning
+# 490G1_Final_Project: Music Genre Classification 
 
 ## Motivation
 Can we capture abstract creative process of individual music composers? In this project we will try to tackle the problems of classification on musical pieces and, upon successful completion, music generation. In the first leg of the project, we will make a model to predict the genre/ composer of any musical piece. Upon successful completion of this part, we will try to tackle the problem of music generation - generating music in the styles of specific composers/ genres - to emulate human creativity.
@@ -62,10 +62,17 @@ We are using the training and test accuracies to evaluate our model. Moreover, w
 
 ## Examples
 1. Live recording and classifying music [(Video Link)](https://drive.google.com/file/d/1jwlGGtvpO5QxxNBi5Uu47j3WT0ZK3p9v/view?usp=drivesdk)
-3. Screen Recorded demo ()
+2. Screen Recorded demo ()
 
-Required inputs
-techniques,  
-components were from preexisting work
-new code
+## Installation
+1. Clone the repo ```(git clone https://github.com/laksh-g/490G1_Final_Project)```
+2. Make sure you have python 3.8+ installed.
+3. Create new virtual environement.
+4. run ```pip install -r requirements.txt``` to install dependencies.
+5. You will also need to install ffmpeg [(Link)](https://www.ffmpeg.org/download.html). After downloading the binaries, add the 'bin folder path' to the PATH variable in System Variables.
+
+## Running the classifier
+1. Run the front_end.py file.
+2. A file browser will appear. Here, select the .mp3 file that you want to classify.
+3. An output on the dialogue box will appear showing the predicted musical genre for your mp3 file.
 
