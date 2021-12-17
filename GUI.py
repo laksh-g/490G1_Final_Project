@@ -2,9 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 
 
-# Function for opening the
-# file explorer window
-# Create the root window
+# Functions for handling Tkinter GUI
 def open_window():
     window = Tk()
     # Set window title

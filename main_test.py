@@ -1,20 +1,13 @@
-import librosa
-import librosa.display
 import os
 import glob
-import cv2
-import torch as t
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as o
 import torch.utils.data
-import tqdm
-import torch.utils.data as tud
 from torch.utils.data import TensorDataset
 import torchvision.io
 import torchvision.transforms
 import pt_util
-from utils import Dataset
 import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
@@ -35,7 +28,6 @@ def process_data(batch_size):
 
     transform = T.Compose([
         T.Resize((288, 432)),
-        # T.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
 
     print("Started Procesing Data")
@@ -44,8 +36,6 @@ def process_data(batch_size):
     class_idx = 0
     for class_name in glob.glob(os.path.join(spectrogram_train_file, "*")):
         for image in glob.glob(os.path.join(class_name, "*")):
-            # print(type(torch.from_numpy(cv2.resize(cv2.imread(image), (IMG_SIZE, IMG_SIZE)))))
-            # print(f"data while processing: {torchvision.io.read_image(image).shape}")
             spectrogram_train.append((transform(torchvision.io.read_image(image)), class_idx)) # fix image read
         class_idx+=1
     spectrogram_test_file = os.path.join(spectrogram_file, "test")
@@ -71,7 +61,6 @@ def process_data(batch_size):
 
     train = spectrogram_train
     tr_x = [torch.tensor(item[0]) for item in train]
-    # print(tr_x[0].shape)
     tr_y = torch.tensor([int(item[1]) for item in train])
     print(f"try_y shape: {tr_y.shape}")
     b = torch.Tensor((len(tr_y), 3, 288, 432))

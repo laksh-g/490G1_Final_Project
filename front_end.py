@@ -1,7 +1,9 @@
+######################################################
+## THIS IS THE TOP LEVEL FILE TO RUN THE PROGRAM
+######################################################
 import os
 import matplotlib.pyplot as plt
 import librosa.display
-import sklearn
 from main_test import MusicGenreNet
 import torchvision.io
 import torchvision.transforms as T
