@@ -92,6 +92,6 @@ if __name__ == '__main__':
     mp3_name = GUI.browseFiles()
     app = application()
     model_version = 'saved_models/model_2.0'
-    audio_file, spectrogram, wavelet, model = app.get_inputs(mp3_name, model_version)
-    genre = app.classify_audio(audio_file, spectrogram, wavelet, model)
+    audio_file, spectrogram_path, wavelet, model = app.get_inputs(mp3_name, model_version)
+    genre = app.classify_audio(audio_file, spectrogram_path, wavelet, model)
     GUI.open_results_window(genre)
