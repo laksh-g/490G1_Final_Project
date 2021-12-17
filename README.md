@@ -62,7 +62,7 @@ We are using the training and test accuracies to evaluate our model. Moreover, w
 
 ## Examples
 1. Live recording and classifying music [(Video Link)](https://drive.google.com/file/d/1jwlGGtvpO5QxxNBi5Uu47j3WT0ZK3p9v/view?usp=drivesdk)
-2. Screen Recorded demo ()
+2. Screen Recorded demo [(Video Link)](https://drive.google.com/file/d/1basZgFVq08BgMmi4refd-uzc3KIt9caK/view?usp=sharing)
 
 ## Installation
 1. Clone the repo ```(git clone https://github.com/laksh-g/490G1_Final_Project)```
