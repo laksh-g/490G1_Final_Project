@@ -24,7 +24,7 @@ class application:
         if not os.path.exists('temp'):
             os.mkdir('temp')
         mp3_title = os.path.basename(mp3)
-        mp3_path = os.path.join(os.getcwd(), mp3_title)
+        mp3_path = mp3 #os.path.join(os.getcwd(), mp3_title) mp3
         save_path = os.path.join(os.getcwd(), 'temp')
         export_dst = os.path.join(save_path, mp3_title.split(".")[0] + '.wav')
         sound = AudioSegment.from_mp3(mp3_path)
@@ -41,7 +41,7 @@ class application:
         if not os.path.exists('temp'):
             os.mkdir('temp')
         mp3_title = os.path.basename(mp3)
-        mp3_path = os.path.join(os.getcwd(), mp3_title)
+        mp3_path = mp3 #os.path.join(os.getcwd(), mp3_title)
         save_path = os.path.join(os.getcwd(), 'temp')
         export_dst = os.path.join(save_path, mp3_title.split(".")[0] + '.wav')
         sound = AudioSegment.from_mp3(mp3_path)
@@ -82,7 +82,7 @@ class application:
 
         x = transform(img)
         x = torch.unsqueeze(x, 0)
-        genre = model.classify_single_input(model, x, device)
+        pred, genre = model.classify_single_input(model, x, device)
         print(f"Classified {audio_file} as {genre}")
         return genre
 
@@ -92,3 +92,4 @@ if __name__ == '__main__':
     model_version = 'saved_models/model_2.0'
     audio_file, spectrogram, wavelet, model = app.get_inputs(mp3_name, model_version)
     genre = app.classify_audio(audio_file, spectrogram, wavelet, model)
+    GUI.open_results_window(genre)

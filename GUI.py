@@ -47,13 +47,13 @@ def open_results_window(results):
     # Set window title
     res_window.title('Music Genre Detector')
     # Set window size
-    res_window.geometry("500x500")
+    res_window.geometry("650x100")
     # Set window background color
     res_window.config(background="WHITE")
     # Create a File Explorer label
     label_file_explorer = Label(res_window,
-                                text="The results are as follows",
-                                width=100, height=4,
+                                text=f"The selected music is of the {results} genre",
+                                width=35, height=1, font=("Arial", 25),
                                 fg="blue")
     button_exit = Button(res_window,
                          text="Exit",
@@ -65,7 +65,5 @@ def open_results_window(results):
 
 def close_window(window):
     window.destroy()
-
-
 
 

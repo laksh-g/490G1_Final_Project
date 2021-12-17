@@ -224,7 +224,8 @@ class MusicGenreNet(nn.Module):
             output = output.reshape(10)
             output = torch.reshape(output, (1, 10))
             pred = output.max(1)[1]
-        return pred
+
+        return pred, labels[pred]
 
 if __name__ == '__main__':
     version = "1.7"
