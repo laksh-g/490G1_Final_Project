@@ -19,8 +19,13 @@ We are using the GTZAN dataset, which contains 1000 music files. The GTZAN datas
 ## Methodology
 ### Training (spectrogram images -> CNN -> Classification (genre))
 1. Using a small part of the GTZAN dataset to get spectrogram images of different genres of music.
-2. Processing the data to get train and test images as tensors of tensors.
-3. Trained a CNN model in Pytorch with the following layers.
+   - Examples of the traning and testing data we generated using Librosa
+   - ![32](https://user-images.githubusercontent.com/67117087/146474767-531ca232-bf75-46f6-8a80-a98354955a93.png)
+               Wavelets example
+   - ![6](https://user-images.githubusercontent.com/67117087/146474707-4196e6ee-5ae0-447d-827d-ba768bcf2af7.png)
+               Spectrogram example
+3. Processing the data to get train and test images as tensors of tensors.
+4. Trained a CNN model in Pytorch with the following layers.
    - Defined layers:
         - self.conv1 = nn.Conv2d(4, 8, (3, 3), (2, 2))
         - self.maxpool1 = nn.MaxPool2d(3, 2)
@@ -44,7 +49,7 @@ We are using the GTZAN dataset, which contains 1000 music files. The GTZAN datas
         - x = self.linear1(x)
         - x = F.leaky_relu(x)
         - x = self.linear2(x)
-4. Get training and testing accuracy.
+5. Get training and testing accuracy.
 
 ### User Interaction (mp3 -> spectrogram -> Model input -> Model output -> Prediction)
 1. Taking mp3 file input from user. (tkinter)
